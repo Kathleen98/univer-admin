@@ -25,7 +25,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/",
       icon: IconDashboard,
     },
     {
@@ -98,38 +98,19 @@ const data = {
     },
   ],
   navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
+
   ],
   documents: [
     {
-      name: "Data Library",
+      name: "Visualizações",
       url: "#",
       icon: IconDatabase,
     },
     {
-      name: "Reports",
+      name: "Acessos",
       url: "#",
       icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
+    }
   ],
 }
 

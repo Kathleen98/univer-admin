@@ -13,18 +13,13 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent,
+  DropdownMenuItem, DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
@@ -36,6 +31,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "../ui/badge"
+import Image from "next/image"
+import { IconPlayerTrackNextFilled, IconPlayerTrackPrevFilled } from "@tabler/icons-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 const data: Payment[] = [
   {
@@ -45,14 +43,17 @@ const data: Payment[] = [
     videoUrl: "",
     type: 'Filme',
     trailerUrl: 'https://exemplo.com/trailers/exemplo.mp4',
-    thumbnailUrl: "https://www.univervideo.com/guia-de-marca/assets/10.png",
+    thumbnailUrl: "https://univer-prod.cloud.seachange.com/dynamic-image-service/unsafe/fit-in/232x348/filters:upscale():fill(blur):format(webp)/univideo01.akamaized.net/cdn/asset/images/thumb-v-WVzeX-A5P2Y.jpg",
     slug: "a-origem",
     releaseDate: '2024-01-15T00:00:00.000Z',
     introStartTime: 120,
     introEndTime: 1234,
     duration: 1231443,
     description: 'testando descrição',
-    ageRating: 'l'
+    ageRating: 'l',
+    gendes: ['Comédia', 'Drama'],
+    years: 2025,
+    views: 15
   },
   {
     id: "m5gr84234324i9",
@@ -61,14 +62,17 @@ const data: Payment[] = [
     videoUrl: "",
     type: 'Documentário',
     trailerUrl: 'https://exemplo.com/trailers/exemplo.mp4',
-    thumbnailUrl: "https://www.univervideo.com/guia-de-marca/assets/10.png",
+    thumbnailUrl: "https://univer-prod.cloud.seachange.com/dynamic-image-service/unsafe/fit-in/232x348/filters:upscale():fill(blur):format(webp)/univideo01.akamaized.net/cdn/asset/images/thumb-v-WVzeX-A5P2Y.jpg",
     slug: "a-origem",
     releaseDate: '2024-01-15T00:00:00.000Z',
     introStartTime: 120,
     introEndTime: 1234,
     duration: 1231443,
     description: 'testando descrição',
-    ageRating: 'l'
+    ageRating: 'l',
+    gendes: ['Comédia', 'Drama'],
+    years: 2025,
+    views: 30
   },
 ]
 
@@ -87,51 +91,60 @@ export type Payment = {
   ageRating: string
   type: string;
   status: string;
-
+  gendes: string[],
+  years: number;
+  views: number;
 }
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "title",
+    accessorKey: 'title',
     header: "Título",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("title")}</div>
-    ),
+    cell: ({ row }) => {
+      const title = row.getValue('title');
+      const thumbnailUrl = row.original.thumbnailUrl
+      return (
+        <div className="capitalize flex gap-2 items-center">
+          <Image width={80} height={180} alt="banner" src={thumbnailUrl} />
+          <div className="">
+            <p>{title as string}</p>
+            <p>{new Date().getHours()}h</p>
+          </div>
+        </div>
+      )
+    },
   },
   {
     accessorKey: "type",
     header: "Tipo",
-    cell: ({ row }) => <div className="lowercase">{row.getValue("type")}</div>,
+    cell: ({ row }) => <Badge className="bg-gray-400 font-bold">{row.getValue("type")}</Badge>,
+  },
+  {
+    accessorKey: "gendes",
+    header: "Gêneros",
+    cell: ({ row }) => {
+      const gendes = row.getValue('gendes') as string[]
+
+      return (<div className="flex gap-1">
+        {gendes.map((item, index) => (
+          <Badge className="dark:text-white font-bold rounded-sm" key={index}>{item}</Badge>
+        ))}
+      </div>)
+    },
+  },
+  {
+    accessorKey: "years",
+    header: "Ano",
+    cell: ({ row }) => <p>{row.getValue("years")}</p>,
   },
   {
     accessorKey: "status",
-    header: 'Status',
-    cell: ({ row }) => <Badge className="text-right font-medium">{row.getValue('status')}</Badge>
+    header: "Status",
+    cell: ({ row }) => <Badge className="dark:text-white font-bold rounded-sm bg-green-700" >{row.getValue('status')}</Badge>,
   },
   {
     id: "actions",
+    header: "Ações",
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original
@@ -145,15 +158,13 @@ export const columns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy payment ID
+              Editar
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>Excluir</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -191,16 +202,36 @@ export function DataTableContents() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
         <Input
-          placeholder="Filter emails..."
+          placeholder="Busca por título"
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
+
+        <Select>
+          <SelectTrigger className="">
+            <SelectValue placeholder="Tipo de conteúdo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="light">Série</SelectItem>
+            <SelectItem value="dark">Filme</SelectItem>
+            <SelectItem value="system">Documentário</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select>
+          <SelectTrigger className="">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="light">Ativo</SelectItem>
+            <SelectItem value="dark">Inativo</SelectItem>
+          </SelectContent>
+        </Select>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
               Columns <ChevronDown />
@@ -225,16 +256,16 @@ export function DataTableContents() {
                 )
               })}
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
-      <div className="overflow-hidden rounded-md border">
-        <Table>
-          <TableHeader>
+      <div className="overflow-hidden rounded-md border ">
+        <Table className="">
+          <TableHeader className="bg-gray-700 ">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead className="p-4 xl:p-6" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -247,15 +278,16 @@ export function DataTableContents() {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody >
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell className="px-4 xl:px-6" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -279,8 +311,8 @@ export function DataTableContents() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} de{" "}
+          {table.getFilteredRowModel().rows.length} linha(s) seleciona(s).
         </div>
         <div className="space-x-2">
           <Button
@@ -289,7 +321,7 @@ export function DataTableContents() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            <IconPlayerTrackPrevFilled />
           </Button>
           <Button
             variant="outline"
@@ -297,7 +329,7 @@ export function DataTableContents() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            <IconPlayerTrackNextFilled />
           </Button>
         </div>
       </div>
