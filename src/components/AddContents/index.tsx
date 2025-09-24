@@ -1,5 +1,6 @@
 import { Button } from "../ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "../ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { Input } from "../ui/input"
 
 export const AddContents = () => {
   return (
@@ -10,7 +11,12 @@ export const AddContents = () => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>Adicionar Conteúdo</DialogHeader>
+        <DialogHeader>
+          <DialogTitle>Adicionar Conteúdo</DialogTitle>
+        </DialogHeader>
+        <DialogDescription>
+          <Input type="text" placeholder="Título" />
+        </DialogDescription>
       </DialogContent>
     </Dialog>
   )
