@@ -4,9 +4,9 @@ export const SchemaAddContents = z.object({
   title: z.string(),
   category: z.string(),
   status: z.string(),
-  gender: z.array(z.string()),
-  duration: z.date(),
-  releaseDate: z.date(),
+  gender: z.string(),
+  duration: z.string(),
+  releaseDate: z.string(),
   description: z.string()
 })
 
