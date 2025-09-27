@@ -7,10 +7,13 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 export const AddContents = () => {
-  const { register, control } = useForm<addContentData>({
+  const { register, control, handleSubmit } = useForm<addContentData>({
     resolver: zodResolver(SchemaAddContents)
   })
 
+  const submit = (data: addContentData) => {
+    console.log(data)
+  }
 
   return (
     <Dialog>
@@ -23,49 +26,59 @@ export const AddContents = () => {
         <DialogHeader>
           <DialogTitle>Adicionar Conteúdo</DialogTitle>
         </DialogHeader>
-        <DialogDescription className="flex flex-col gap-3">
-          <Input {...register('title')} type="text" placeholder="Título" />
-          <div className="flex justify-between">
-            <Controller
-              name="category"
-              control={control}
-              render={({ field }) => (
-                <Select >
-                  <SelectTrigger value={field.value} onChange={field.onChange} className="w-[45%]">
-                    <SelectValue placeholder={'Categoria'} />
-                  </SelectTrigger>
+        <form onSubmit={handleSubmit(submit)} >
+          <DialogDescription className="flex flex-col gap-3">
+            <Input {...register('title')} type="text" placeholder="Título" />
+            <div className="flex justify-between">
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value} >
+                    <SelectTrigger className="w-[45%]">
+                      <SelectValue placeholder={'Categoria'} />
+                    </SelectTrigger>
 
-                  <SelectContent >
-                    <SelectItem value="movie">Filmes</SelectItem>
-                    <SelectItem value="serie">Série</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
+                    <SelectContent >
+                      <SelectItem value="movie">Filmes</SelectItem>
+                      <SelectItem value="serie">Série</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
 
-            />
-            <Select>
-              <SelectTrigger className="w-[45%]">
-                <SelectValue placeholder={'Status'} />
-              </SelectTrigger>
+              />
 
-              <SelectContent >
-                <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="new">Novidade</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Input placeholder="Epsódios" />
-          <Input placeholder="Gênero" />
-          <Input placeholder="Duração" />
+              <Controller
+                name='status'
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value} >
+                    <SelectTrigger className="w-[45%]">
+                      <SelectValue placeholder={'Status'} />
+                    </SelectTrigger>
+
+                    <SelectContent >
+                      <SelectItem value="active">Ativo</SelectItem>
+                      <SelectItem value="new">Novidade</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+            </div>
+            <Input placeholder="Epsódios" />
+            <Input  {...register("gender")} placeholder="Gênero" />
+            <Input  {...register("duration")} placeholder="Duração" />
 
 
 
-          <Input placeholder="Data de lançamento" />
+            <Input  {...register("releaseDate")} placeholder="Data de lançamento" />
 
-          <Input placeholder="Descrição" />
+            <Input  {...register("description")} placeholder="Descrição" />
 
-          <Button className="dark:text-white font-bold" >Adicionar</Button>
-        </DialogDescription>
+            <Button type="submit" className="dark:text-white font-bold" >Adicionar</Button>
+          </DialogDescription>
+        </form>
       </DialogContent>
     </Dialog>
   )
