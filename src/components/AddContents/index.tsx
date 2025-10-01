@@ -29,6 +29,8 @@ export const AddContents = () => {
         <form onSubmit={handleSubmit(submit)} >
           <DialogDescription className="flex flex-col gap-3">
             <Input {...register('title')} type="text" placeholder="Título" />
+            <Input {...register('slug')} type="text" placeholder="Slug" />
+            <Input {...register('releaseDate')} type="text" placeholder="Data de lançamento" />
             <div className="flex justify-between">
               <Controller
                 name="category"
@@ -66,6 +68,7 @@ export const AddContents = () => {
               />
 
             </div>
+            <Input placeholder="Temporadas" />
             <Input placeholder="Epsódios" />
             <Input  {...register("gender")} placeholder="Gênero" />
             <Input  {...register("duration")} placeholder="Duração" />
