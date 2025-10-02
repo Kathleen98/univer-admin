@@ -31,6 +31,10 @@ export const AddContents = () => {
             <Input {...register('title')} type="text" placeholder="Título" />
             <Input {...register('slug')} type="text" placeholder="Slug" />
             <Input {...register('releaseDate')} type="text" placeholder="Data de lançamento" />
+            <div className="flex justify-between gap-2">
+              <Input {...register('introStartTime')} type="text" placeholder="Início do conteúdo" />
+              <Input {...register('introEndTime')} type="text" placeholder="Fim do conteúdo" />
+            </div>
             <div className="flex justify-between">
               <Controller
                 name="category"
@@ -72,11 +76,8 @@ export const AddContents = () => {
             <Input placeholder="Epsódios" />
             <Input  {...register("gender")} placeholder="Gênero" />
             <Input  {...register("duration")} placeholder="Duração" />
-
-
-
+            <Input {...register('ageRating')} type="text" placeholder="Faixa etária" />
             <Input  {...register("releaseDate")} placeholder="Data de lançamento" />
-
             <Input  {...register("description")} placeholder="Descrição" />
 
             <Button type="submit" className="dark:text-white font-bold" >Adicionar</Button>
