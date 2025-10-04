@@ -72,7 +72,7 @@ export const AddContents = () => {
               />
 
             </div>
-            <Input placeholder="Temporadas" />
+            <Input {...register("seasons")} placeholder="Temporadas" />
             <Input placeholder="Epsódios" />
             <Input  {...register("gender")} placeholder="Gênero" />
             <Input  {...register("duration")} placeholder="Duração" />
